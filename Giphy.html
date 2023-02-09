@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        #container{
+            grid-template-columns: auto auto auto auto;        
+        }
+
+        img{
+            width: 200px;
+            margin: 10px;
+            box-shadow: 5px 5px lightgray;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <h1>GIPHY PARTY</h1>
+    <form id="search-form">
+        <input id="search-input" type="text" placeholder="Enter the term">
+        <input id="search" type="submit" value="Search Giphy"></input>
+        <input id="remove" type="button" value="Remove"></input>
+    </form>
+    
+    <br><br>
+    <div id="container">
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.2/axios.min.js"></script>
+
+    <script>
+   
+
+        let searchForm = document.getElementById('search-form');
+        let searchInput = document.getElementById('search-input');
+        let serachButton = document.getElementById('search');
+        let removeButton = document.getElementById('remove');
+        let containerGiphy = document.getElementById('container');
+
+        function addGiphy (res){
+            let numGiphy = res.data.length;
+            if(numGiphy){
+                let randomNum = Math.floor(Math.random()*numGiphy);
+                let newGiphyUrl = res.data[randomNum].images.original.url;
+
+                let showGiphy = document.createElement('img');
+                showGiphy.setAttribute('src', newGiphyUrl);
+
+                containerGiphy.append(showGiphy);
+                console.log(containerGiphy);
+            }
+            
+        }
+
+        searchForm.addEventListener('submit', async (event)=>{
+            event.preventDefault();
+
+            let searchName = searchInput.value;
+            searchInput.value = '';
+            console.log(searchName);
+ 
+            const response = await axios.get('https://api.giphy.com/v1/gifs/search', {
+                params:{
+                    q: searchName,
+                    api_key: 'e0ATGyL8PPmSmtsRgwlFpeeV4Zxx9EN4'
+                }
+            });
+            addGiphy(response.data)
+
+            
+        removeButton.addEventListener('click',function(){
+                containerGiphy.innerHTML = '';
+            })
+        })
+
+
+
+
+
+
+
+        
+
+    </script>
+</body>
+</html>
